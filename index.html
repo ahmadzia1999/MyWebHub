@@ -3,225 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>مرکز مدیریت وب‌سایت‌ها</title>
+    <title>مرکز مدیریت وب (Pro)</title>
     <style>
-        /* --- تنظیمات پایه و تم تیره --- */
         :root {
-            --bg-color: #0f0f13;
-            --surface-color: #1e1e24;
-            --surface-hover: #2a2a32;
-            --text-main: #f0f0f0;
-            --text-muted: #8a8a93;
-            --primary: #00d2ff;
-            --danger: #ff4757;
-            --danger-hover: #ff6b81;
-            --folder-color: #ffca28;
-            --border-radius: 14px;
+            --bg-color: #0f0f13; --surface-color: #1e1e24; --surface-hover: #2a2a32;
+            --text-main: #f0f0f0; --text-muted: #8a8a93; --primary: #00d2ff;
+            --danger: #ff4757; --folder-color: #ffca28; --border-radius: 14px;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding-bottom: 90px;
-            overflow-x: hidden;
-        }
-
-        /* --- هدر و ابزارها --- */
-        header {
-            background-color: var(--surface-color);
-            padding: 15px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            border-bottom: 1px solid #333;
-        }
-
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .top-bar h1 {
-            font-size: 1.1rem;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; user-select: none; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 90px; overflow-x: hidden; }
+        
+        /* --- هدر --- */
+        header { background-color: var(--surface-color); padding: 15px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .top-bar h1 { font-size: 1.1rem; color: var(--primary); display: flex; align-items: center; gap: 8px; }
         .toolbar { display: flex; gap: 10px; }
-
-        .tool-btn {
-            background: var(--surface-hover);
-            border: none;
-            color: white;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-        
-        .tool-btn:active { transform: scale(0.9); }
-
-        .breadcrumbs {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
-            direction: rtl;
-        }
-        
+        .tool-btn { background: var(--surface-hover); border: none; color: white; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; }
+        .breadcrumbs { font-size: 0.85rem; color: var(--text-muted); display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
         .breadcrumbs span { cursor: pointer; color: var(--primary); }
-        .breadcrumbs span:last-child { color: var(--text-main); font-weight: bold; cursor: default; }
-
-        .search-box {
-            width: 100%;
-            padding: 12px 15px;
-            border-radius: 25px;
-            border: 1px solid #333;
-            background-color: #15151a;
-            color: white;
-            font-size: 0.95rem;
-            outline: none;
-        }
+        .search-box { width: 100%; padding: 12px 15px; border-radius: 25px; border: 1px solid #333; background-color: #15151a; color: white; outline: none; }
 
         /* --- لیست آیتم‌ها --- */
-        .items-container {
-            padding: 15px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-        }
-
-        .item-card {
-            background-color: var(--surface-color);
-            border-radius: var(--border-radius);
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            text-decoration: none;
-            color: var(--text-main);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            border: 1px solid #2a2a32;
-            aspect-ratio: 1 / 1;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
+        .items-container { padding: 15px; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+        .item-card { background-color: var(--surface-color); border-radius: var(--border-radius); padding: 15px; display: flex; flex-direction: column; align-items: center; text-align: center; border: 1px solid #2a2a32; aspect-ratio: 1 / 1; justify-content: center; position: relative; overflow: hidden; }
         .item-card:active { transform: scale(0.95); }
         .folder-card { border-color: rgba(255, 202, 40, 0.3); }
         .site-card { border-color: rgba(0, 210, 255, 0.3); cursor: pointer; }
-
         .item-icon { font-size: 2.5rem; margin-bottom: 10px; }
         .item-name { font-size: 0.95rem; font-weight: bold; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .item-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 5px; background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 10px; }
         
-        .item-sub { 
-            font-size: 0.7rem; color: var(--text-muted); margin-top: 5px; 
-            background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 10px; 
-            max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
-        }
+        /* --- آیکون‌های وضعیت --- */
+        .badge-lock, .badge-info { position: absolute; top: 8px; right: 8px; font-size: 0.9rem; }
 
-        .item-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        /* --- منوی عملیات (Long Press) --- */
-        .action-menu {
-            position: absolute;
-            bottom: -100%;
-            left: 0;
-            width: 100%;
-            background: rgba(30, 30, 36, 0.98);
-            backdrop-filter: blur(5px);
-            display: flex;
-            flex-direction: column;
-            transition: bottom 0.3s;
-            z-index: 10;
-        }
+        /* --- منوی عملیات --- */
+        .action-menu { position: absolute; bottom: -100%; left: 0; width: 100%; background: rgba(30, 30, 36, 0.98); display: flex; flex-direction: column; transition: bottom 0.3s; z-index: 10; }
         .action-menu.active { bottom: 0; }
-        .action-btn { 
-            background: none; border: none; color: white; padding: 12px 10px; 
-            font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; 
-        }
-        .action-btn.edit { color: var(--primary); }
-        .action-btn.delete { color: var(--danger); }
+        .action-btn { background: none; border: none; color: white; padding: 12px; font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .action-btn.edit { color: var(--primary); } .action-btn.delete { color: var(--danger); }
 
         /* --- دکمه‌های شناور --- */
         .fab-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 15px; z-index: 100; }
-        .fab { border: none; padding: 14px 24px; border-radius: 30px; font-size: 0.95rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .fab { border: none; padding: 14px 24px; border-radius: 30px; font-size: 0.95rem; font-weight: bold; display: flex; align-items: center; gap: 8px; }
         .fab-site { background-color: var(--primary); color: #000; }
         .fab-folder { background-color: var(--folder-color); color: #000; }
 
         /* --- مودال‌ها --- */
-        .modal-overlay { 
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
-            background: rgba(0,0,0,0.85); display: none; align-items: center; 
-            justify-content: center; z-index: 1000; padding: 20px; 
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
         .modal-overlay.active { display: flex; }
-        .modal-content { 
-            background-color: var(--surface-color); width: 100%; max-width: 400px; 
-            border-radius: var(--border-radius); padding: 25px; animation: popIn 0.3s ease-out;
-            max-height: 90vh; overflow-y: auto;
-        }
+        .modal-content { background-color: var(--surface-color); width: 100%; max-width: 400px; border-radius: var(--border-radius); padding: 25px; max-height: 90vh; overflow-y: auto; }
         .modal-content h2 { margin-bottom: 20px; font-size: 1.2rem; text-align: center; color: var(--primary); }
-        
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; margin-bottom: 6px; font-size: 0.85rem; color: var(--text-muted); }
-        .form-group input, .form-group textarea { 
-            width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #444; 
-            background-color: #15151a; color: white; font-size: 0.95rem; outline: none; 
-            font-family: inherit;
-        }
-        .form-group textarea { resize: vertical; min-height: 60px; }
-        
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #444; background-color: #15151a; color: white; outline: none; }
         .btn-group { display: flex; gap: 10px; margin-top: 25px; }
-        .btn { flex: 1; padding: 12px; border-radius: 8px; border: none; font-size: 0.95rem; font-weight: bold; cursor: pointer; }
+        .btn { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: bold; }
         .btn-save { background-color: var(--primary); color: #000; }
         .btn-cancel { background-color: var(--surface-hover); color: white; }
         .btn-danger { background-color: var(--danger); color: white; }
-        .btn-danger:active { background-color: var(--danger-hover); }
 
-        .empty-state { grid-column: 1 / -1; text-align: center; color: var(--text-muted); margin-top: 50px; }
+        /* --- مرورگر داخلی (Iframe) --- */
+        #internalBrowser { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #fff; z-index: 9999; display: none; flex-direction: column; }
+        .browser-header { background: var(--surface-color); padding: 10px 15px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #333; }
+        .browser-title { font-size: 0.9rem; color: white; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .browser-close { background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 20px; font-weight: bold; }
+        #webIframe { flex: 1; width: 100%; border: none; }
 
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
+        /* --- صفحه قفل (Master Password) --- */
+        #lockScreen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg-color); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        #lockScreen input { width: 100%; max-width: 300px; padding: 15px; border-radius: 10px; border: 1px solid #444; background: #15151a; color: white; text-align: center; font-size: 1.2rem; margin-bottom: 15px; letter-spacing: 5px; }
     </style>
 </head>
 <body>
+
+    <!-- صفحه قفل اپلیکیشن -->
+    <div id="lockScreen">
+        <div style="font-size: 4rem; margin-bottom: 20px;">🔐</div>
+        <h2 style="margin-bottom: 20px; color: var(--primary);">ورود به مرکز مدیریت</h2>
+        <input type="password" id="masterPassInput" placeholder="رمز عبور را وارد کنید...">
+        <button class="btn btn-save" style="max-width: 300px; width: 100%;" onclick="checkMasterPass()">ورود</button>
+        <p style="margin-top: 20px; font-size: 0.8rem; color: var(--text-muted);">(اگر رمزی تنظیم نکرده‌اید، خالی بگذارید و وارد شوید)</p>
+    </div>
+
+    <!-- مرورگر داخلی -->
+    <div id="internalBrowser">
+        <div class="browser-header">
+            <button class="browser-close" onclick="closeBrowser()">✕ بستن</button>
+            <div class="browser-title" id="browserTitle">در حال بارگذاری...</div>
+        </div>
+        <iframe id="webIframe" src="about:blank" allow="camera; microphone; autoplay; encrypted-media; fullscreen; geolocation;"></iframe>
+    </div>
 
     <!-- هدر اصلی -->
     <header>
         <div class="top-bar">
             <h1>🗂️ مرکز مدیریت وب</h1>
             <div class="toolbar">
+                <button class="tool-btn" onclick="openSettings()" title="تنظیمات">⚙️</button>
                 <button class="tool-btn" id="goBackBtn" title="بازگشت">↩</button>
             </div>
         </div>
@@ -229,47 +107,29 @@
         <input type="text" id="searchInput" class="search-box" placeholder="جستجو...">
     </header>
 
-    <!-- لیست آیتم‌ها -->
     <div class="items-container" id="itemsContainer"></div>
 
-    <!-- دکمه‌های شناور -->
     <div class="fab-container">
-        <button class="fab fab-folder" id="addFolderBtn"><span>📁</span> پوشه جدید</button>
-        <button class="fab fab-site" id="addSiteBtn"><span>🌐</span> سایت جدید</button>
+        <button class="fab fab-folder" id="addFolderBtn"><span>📁</span> پوشه</button>
+        <button class="fab fab-site" id="addSiteBtn"><span>🌐</span> سایت</button>
     </div>
 
     <!-- مودال افزودن/ویرایش سایت -->
     <div class="modal-overlay" id="siteModal">
         <div class="modal-content">
-            <h2 id="siteModalTitle">افزودن وب‌سایت</h2>
+            <h2 id="siteModalTitle">افزودن سایت</h2>
             <input type="hidden" id="editSiteId">
+            <div class="form-group"><label>نام سایت</label><input type="text" id="siteName"></div>
+            <div class="form-group"><label>آدرس (https://)</label><input type="url" id="siteUrl" dir="ltr"></div>
+            <div class="form-group"><label>پروفایل/اکانت</label><input type="text" id="siteProfile"></div>
+            <div class="form-group"><label>یوزرنیم</label><input type="text" id="siteUsername" dir="ltr"></div>
+            <div class="form-group"><label>پسورد</label><input type="text" id="sitePassword" dir="ltr"></div>
+            <div class="form-group"><label>یادداشت</label><textarea id="siteNote"></textarea></div>
             
+            <hr style="border-color: #333; margin: 15px 0;">
             <div class="form-group">
-                <label>نام سایت (مثلاً: هاست)</label>
-                <input type="text" id="siteName" placeholder="نام سایت...">
-            </div>
-            <div class="form-group">
-                <label>آدرس سایت (با https://)</label>
-                <input type="url" id="siteUrl" dir="ltr" placeholder="https://...">
-            </div>
-            <div class="form-group">
-                <label>پروفایل / نام اکانت (اختیاری)</label>
-                <input type="text" id="siteProfile" placeholder="مثلاً: اکانت ادمین...">
-            </div>
-            
-            <hr style="border: 0; border-top: 1px solid #333; margin: 15px 0;">
-            
-            <div class="form-group">
-                <label>یوزرنیم / ایمیل</label>
-                <input type="text" id="siteUsername" dir="ltr" placeholder="example@mail.com">
-            </div>
-            <div class="form-group">
-                <label>رمز عبور</label>
-                <input type="text" id="sitePassword" dir="ltr" placeholder="********">
-            </div>
-            <div class="form-group">
-                <label>یادداشت (Note)</label>
-                <textarea id="siteNote" placeholder="توضیحات اضافه..."></textarea>
+                <label style="color: var(--folder-color);">🔒 قفل اختصاصی این سایت (اختیاری)</label>
+                <input type="password" id="siteLockPass" placeholder="برای ورود رمز لازم است">
             </div>
 
             <div class="btn-group">
@@ -282,11 +142,13 @@
     <!-- مودال افزودن/ویرایش پوشه -->
     <div class="modal-overlay" id="folderModal">
         <div class="modal-content">
-            <h2 id="folderModalTitle">ساخت پوشه جدید</h2>
+            <h2 id="folderModalTitle">ساخت پوشه</h2>
             <input type="hidden" id="editFolderId">
+            <div class="form-group"><label>نام پوشه</label><input type="text" id="folderName"></div>
+            <hr style="border-color: #333; margin: 15px 0;">
             <div class="form-group">
-                <label>نام پوشه</label>
-                <input type="text" id="folderName" placeholder="نام پوشه...">
+                <label style="color: var(--folder-color);">🔒 قفل اختصاصی این پوشه (اختیاری)</label>
+                <input type="password" id="folderLockPass" placeholder="برای ورود رمز لازم است">
             </div>
             <div class="btn-group">
                 <button class="btn btn-cancel" id="cancelFolderBtn">انصراف</button>
@@ -295,84 +157,166 @@
         </div>
     </div>
 
-    <!-- مودال تایید حذف -->
+    <!-- مودال حذف -->
     <div class="modal-overlay" id="deleteModal">
         <div class="modal-content">
             <h2 style="color: var(--danger);">حذف آیتم</h2>
-            <p style="text-align: center; margin-bottom: 20px; line-height: 1.6;">
-                آیا از حذف این مورد مطمئن هستید؟<br>
-                <span style="font-size: 0.85rem; color: var(--text-muted);">(در صورت پوشه بودن، تمام محتویات داخل آن نیز حذف می‌شوند)</span>
-            </p>
+            <p style="text-align: center; margin-bottom: 20px;">آیا مطمئن هستید؟ زیرمجموعه‌ها هم حذف می‌شوند.</p>
             <input type="hidden" id="deleteItemId">
             <div class="btn-group">
-                <button class="btn btn-cancel" id="cancelDeleteBtn">انصراف</button>
-                <button class="btn btn-danger" id="confirmDeleteBtn">بله، حذف کن</button>
+                <button class="btn btn-cancel" onclick="document.getElementById('deleteModal').classList.remove('active')">انصراف</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn">حذف کن</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال تنظیمات و بکاپ -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-content">
+            <h2>تنظیمات و بکاپ</h2>
+            
+            <div class="form-group">
+                <label>تغییر پسورد عمومی برنامه</label>
+                <input type="password" id="newMasterPass" placeholder="رمز جدید (خالی بگذارید تا حذف شود)">
+                <button class="btn btn-save" style="margin-top: 10px; width: 100%;" onclick="saveMasterPass()">ذخیره پسورد</button>
+            </div>
+
+            <hr style="border-color: #333; margin: 20px 0;">
+
+            <div class="form-group">
+                <label>پشتیبان‌گیری و بازیابی</label>
+                <button class="btn" style="background-color: #4CAF50; color: white; width: 100%; margin-bottom: 10px;" onclick="backupData()">📥 دانلود فایل بکاپ</button>
+                <button class="btn" style="background-color: #FF9800; color: white; width: 100%;" onclick="document.getElementById('restoreFile').click()">📤 بازیابی از فایل</button>
+                <input type="file" id="restoreFile" accept=".json" style="display: none;" onchange="restoreData(event)">
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-cancel" onclick="document.getElementById('settingsModal').classList.remove('active')">بستن</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال درخواست رمز عبور برای آیتم‌ها -->
+    <div class="modal-overlay" id="unlockModal">
+        <div class="modal-content">
+            <h2 style="color: var(--folder-color);">🔒 قفل است</h2>
+            <p style="text-align: center; margin-bottom: 15px;">لطفاً رمز عبور این آیتم را وارد کنید.</p>
+            <input type="hidden" id="unlockItemId">
+            <div class="form-group"><input type="password" id="unlockPassInput" placeholder="رمز عبور..." style="text-align: center;"></div>
+            <div class="btn-group">
+                <button class="btn btn-cancel" onclick="document.getElementById('unlockModal').classList.remove('active')">انصراف</button>
+                <button class="btn btn-save" onclick="verifyItemLock()">باز کردن</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- دیتابیس خالی (اطلاعات نمونه پاک شد) ---
+        // --- دیتابیس ---
         let db = JSON.parse(localStorage.getItem('webHubProDB')) || [];
+        let appSettings = JSON.parse(localStorage.getItem('webHubProSettings')) || { masterPass: "" };
         let currentPath = 'root';
         let searchQuery = '';
 
-        const itemsContainer = document.getElementById('itemsContainer');
-        const breadcrumbs = document.getElementById('breadcrumbs');
-        const searchInput = document.getElementById('searchInput');
-        
-        const siteModal = document.getElementById('siteModal');
-        const folderModal = document.getElementById('folderModal');
-        const deleteModal = document.getElementById('deleteModal');
-
+        // --- توابع کمکی ---
         function saveDB() { localStorage.setItem('webHubProDB', JSON.stringify(db)); }
+        function saveSettings() { localStorage.setItem('webHubProSettings', JSON.stringify(appSettings)); }
+        function closeAllActionMenus() { document.querySelectorAll('.action-menu').forEach(m => m.classList.remove('active')); }
 
-        function getPathArray(id) {
-            let path = [];
-            let current = db.find(item => item.id === id);
-            while (current) {
-                path.unshift(current);
-                current = db.find(item => item.id === current.parentId);
+        // --- امنیت (Master Password) ---
+        function checkMasterPass() {
+            const input = document.getElementById('masterPassInput').value;
+            if (appSettings.masterPass === "" || input === appSettings.masterPass) {
+                document.getElementById('lockScreen').style.display = 'none';
+                renderBreadcrumbs();
+                renderItems();
+            } else {
+                alert('رمز عبور اشتباه است!');
+                document.getElementById('masterPassInput').value = '';
             }
+        }
+
+        function openSettings() {
+            document.getElementById('newMasterPass').value = '';
+            document.getElementById('settingsModal').classList.add('active');
+        }
+
+        function saveMasterPass() {
+            const newPass = document.getElementById('newMasterPass').value.trim();
+            appSettings.masterPass = newPass;
+            saveSettings();
+            alert('پسورد عمومی با موفقیت ذخیره شد.');
+            document.getElementById('settingsModal').classList.remove('active');
+        }
+
+        // --- بکاپ و بازیابی ---
+        function backupData() {
+            const dataStr = JSON.stringify({ db: db, settings: appSettings });
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `WebHub_Backup_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function restoreData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const content = JSON.parse(e.target.result);
+                    if (content.db && content.settings) {
+                        db = content.db;
+                        appSettings = content.settings;
+                        saveDB();
+                        saveSettings();
+                        alert('بازیابی با موفقیت انجام شد!');
+                        location.reload();
+                    } else {
+                        alert('فایل بکاپ معتبر نیست!');
+                    }
+                } catch (err) {
+                    alert('خطا در خواندن فایل!');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // --- رندرها ---
+        function getPathArray(id) {
+            let path = []; let current = db.find(item => item.id === id);
+            while (current) { path.unshift(current); current = db.find(item => item.id === current.parentId); }
             return path;
         }
 
         function renderBreadcrumbs() {
+            const breadcrumbs = document.getElementById('breadcrumbs');
             breadcrumbs.innerHTML = '';
             const homeSpan = document.createElement('span');
-            homeSpan.textContent = 'خانه';
-            homeSpan.onclick = () => navigateTo('root');
+            homeSpan.textContent = 'خانه'; homeSpan.onclick = () => navigateTo('root');
             breadcrumbs.appendChild(homeSpan);
 
-            const path = getPathArray(currentPath);
-            path.forEach(folder => {
+            getPathArray(currentPath).forEach(folder => {
                 breadcrumbs.appendChild(document.createTextNode(' / '));
                 const span = document.createElement('span');
-                span.textContent = folder.name;
-                span.onclick = () => navigateTo(folder.id);
+                span.textContent = folder.name; span.onclick = () => navigateTo(folder.id);
                 breadcrumbs.appendChild(span);
             });
         }
 
-        function closeAllActionMenus() {
-            document.querySelectorAll('.action-menu').forEach(menu => menu.classList.remove('active'));
-        }
-
         function renderItems() {
+            const itemsContainer = document.getElementById('itemsContainer');
             itemsContainer.innerHTML = '';
             let items = db.filter(item => item.parentId === currentPath);
             
             if (searchQuery) {
-                items = db.filter(item => 
-                    item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                    (item.url && item.url.toLowerCase().includes(searchQuery.toLowerCase())) ||
-                    (item.profile && item.profile.toLowerCase().includes(searchQuery.toLowerCase())) ||
-                    (item.username && item.username.toLowerCase().includes(searchQuery.toLowerCase()))
-                );
+                items = db.filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()) || (item.url && item.url.toLowerCase().includes(searchQuery.toLowerCase())));
             }
 
             if (items.length === 0) {
-                itemsContainer.innerHTML = `<div class="empty-state">هیچ آیتمی یافت نشد. از دکمه‌های پایین برای افزودن استفاده کنید.</div>`;
+                itemsContainer.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #888; margin-top: 50px;">آیتمی یافت نشد.</div>`;
                 return;
             }
 
@@ -380,27 +324,23 @@
                 const card = document.createElement('div');
                 card.className = `item-card ${item.type === 'folder' ? 'folder-card' : 'site-card'}`;
                 
+                // بج قفل
+                const lockBadge = item.lockPass ? `<div class="badge-lock">🔒</div>` : '';
+                const infoBadge = (item.type === 'site' && (item.username || item.password)) ? `<div class="badge-info">🔐</div>` : '';
+
                 if (item.type === 'folder') {
-                    card.innerHTML = `<div class="item-icon" style="color: var(--folder-color)">📁</div><div class="item-name">${item.name}</div>`;
+                    card.innerHTML = `${lockBadge}<div class="item-icon" style="color: var(--folder-color)">📁</div><div class="item-name">${item.name}</div>`;
                     card.onclick = () => {
                         if(card.querySelector('.action-menu.active')) { closeAllActionMenus(); return; }
-                        navigateTo(item.id);
+                        if (item.lockPass) { promptUnlock(item.id, 'folder'); } 
+                        else { navigateTo(item.id); }
                     };
                 } else {
-                    const hasCreds = (item.username || item.password) ? `<div class="item-badge">🔐</div>` : '';
-                    
-                    card.innerHTML = `
-                        ${hasCreds}
-                        <div class="item-icon" style="color: var(--primary)">🌐</div>
-                        <div class="item-name">${item.name}</div>
-                        ${item.profile ? `<div class="item-sub">${item.profile}</div>` : ''}
-                    `;
-                    // **حفظ Session: هدایت به مرورگر خارجی**
-                    card.onclick = (e) => {
+                    card.innerHTML = `${lockBadge}${infoBadge}<div class="item-icon" style="color: var(--primary)">🌐</div><div class="item-name">${item.name}</div>${item.profile ? `<div class="item-sub">${item.profile}</div>` : ''}`;
+                    card.onclick = () => {
                         if(card.querySelector('.action-menu.active')) { closeAllActionMenus(); return; }
-                        
-                        // باز کردن لینک در مرورگر اصلی گوشی برای جلوگیری از پاک شدن لاگین
-                        window.open(item.url, '_system');
+                        if (item.lockPass) { promptUnlock(item.id, 'site'); } 
+                        else { openBrowser(item.url, item.name); }
                     };
                 }
 
@@ -415,97 +355,68 @@
                 let pressTimer;
                 card.addEventListener('touchstart', (e) => { 
                     if(e.target.closest('.action-menu')) return;
-                    pressTimer = setTimeout(() => { 
-                        closeAllActionMenus();
-                        actionMenu.classList.add('active'); 
-                    }, 500); 
+                    pressTimer = setTimeout(() => { closeAllActionMenus(); actionMenu.classList.add('active'); }, 500); 
                 });
                 card.addEventListener('touchend', () => clearTimeout(pressTimer));
                 card.addEventListener('touchmove', () => clearTimeout(pressTimer));
-
                 itemsContainer.appendChild(card);
             });
         }
 
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.item-card')) closeAllActionMenus();
-        });
+        // --- مرورگر داخلی ---
+        function openBrowser(url, title) {
+            document.getElementById('browserTitle').textContent = title;
+            document.getElementById('webIframe').src = url;
+            document.getElementById('internalBrowser').style.display = 'flex';
+        }
+        function closeBrowser() {
+            document.getElementById('webIframe').src = 'about:blank';
+            document.getElementById('internalBrowser').style.display = 'none';
+        }
 
+        // --- قفل آیتم‌ها ---
+        function promptUnlock(id, type) {
+            document.getElementById('unlockItemId').value = id;
+            document.getElementById('unlockPassInput').value = '';
+            document.getElementById('unlockModal').classList.add('active');
+            document.getElementById('unlockModal').dataset.type = type;
+        }
+
+        function verifyItemLock() {
+            const id = document.getElementById('unlockItemId').value;
+            const pass = document.getElementById('unlockPassInput').value;
+            const type = document.getElementById('unlockModal').dataset.type;
+            const item = db.find(i => i.id === id);
+
+            if (item.lockPass === pass) {
+                document.getElementById('unlockModal').classList.remove('active');
+                if (type === 'folder') navigateTo(id);
+                else openBrowser(item.url, item.name);
+            } else {
+                alert('رمز عبور اشتباه است!');
+            }
+        }
+
+        // --- ناوبری ---
         function navigateTo(id) {
             currentPath = id;
-            searchInput.value = '';
+            document.getElementById('searchInput').value = '';
             searchQuery = '';
             renderBreadcrumbs();
             renderItems();
         }
-
         document.getElementById('goBackBtn').onclick = () => {
             if (currentPath === 'root') return;
             const currentFolder = db.find(item => item.id === currentPath);
             navigateTo(currentFolder ? currentFolder.parentId : 'root');
         };
 
-        // ویرایش
-        window.openEditModal = function(id, event) {
-            event.stopPropagation();
-            closeAllActionMenus();
-            const item = db.find(i => i.id === id);
-            if (!item) return;
-
-            if (item.type === 'site') {
-                document.getElementById('siteModalTitle').textContent = 'ویرایش وب‌سایت';
-                document.getElementById('editSiteId').value = item.id;
-                document.getElementById('siteName').value = item.name;
-                document.getElementById('siteUrl').value = item.url;
-                document.getElementById('siteProfile').value = item.profile || '';
-                document.getElementById('siteUsername').value = item.username || '';
-                document.getElementById('sitePassword').value = item.password || '';
-                document.getElementById('siteNote').value = item.note || '';
-                siteModal.classList.add('active');
-            } else {
-                document.getElementById('folderModalTitle').textContent = 'ویرایش پوشه';
-                document.getElementById('editFolderId').value = item.id;
-                document.getElementById('folderName').value = item.name;
-                folderModal.classList.add('active');
-            }
-        };
-
-        // حذف
-        window.askDeleteItem = function(id, event) {
-            event.stopPropagation();
-            closeAllActionMenus();
-            document.getElementById('deleteItemId').value = id;
-            deleteModal.classList.add('active');
-        };
-
-        document.getElementById('cancelDeleteBtn').onclick = () => deleteModal.classList.remove('active');
-        
-        document.getElementById('confirmDeleteBtn').onclick = () => {
-            const id = document.getElementById('deleteItemId').value;
-            function deleteRecursive(itemId) {
-                const children = db.filter(item => item.parentId === itemId);
-                children.forEach(child => deleteRecursive(child.id));
-                db = db.filter(item => item.id !== itemId);
-            }
-            deleteRecursive(id);
-            saveDB();
-            renderItems();
-            deleteModal.classList.remove('active');
-        };
-
-        // ذخیره سایت
+        // --- فرم‌ها (سایت و پوشه) ---
         document.getElementById('addSiteBtn').onclick = () => {
-            document.getElementById('siteModalTitle').textContent = 'افزودن وب‌سایت';
-            document.getElementById('editSiteId').value = '';
-            document.getElementById('siteName').value = '';
-            document.getElementById('siteUrl').value = '';
-            document.getElementById('siteProfile').value = '';
-            document.getElementById('siteUsername').value = '';
-            document.getElementById('sitePassword').value = '';
-            document.getElementById('siteNote').value = '';
-            siteModal.classList.add('active');
+            document.getElementById('siteModalTitle').textContent = 'افزودن سایت';
+            ['editSiteId','siteName','siteUrl','siteProfile','siteUsername','sitePassword','siteNote','siteLockPass'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('siteModal').classList.add('active');
         };
-        document.getElementById('cancelSiteBtn').onclick = () => siteModal.classList.remove('active');
 
         document.getElementById('saveSiteBtn').onclick = () => {
             const id = document.getElementById('editSiteId').value;
@@ -515,57 +426,95 @@
             const username = document.getElementById('siteUsername').value.trim();
             const password = document.getElementById('sitePassword').value.trim();
             const note = document.getElementById('siteNote').value.trim();
+            const lockPass = document.getElementById('siteLockPass').value.trim();
 
             if (!name || !url) { alert('نام و آدرس الزامی است!'); return; }
             if (!/^https?:\/\//i.test(url)) { url = 'https://' + url; }
 
             if (id) {
                 const index = db.findIndex(i => i.id === id);
-                if (index !== -1) {
-                    db[index] = { ...db[index], name, url, profile, username, password, note };
-                }
+                db[index] = { ...db[index], name, url, profile, username, password, note, lockPass };
             } else {
-                db.push({ 
-                    id: 's_' + Date.now(), type: 'site', name, url, profile, 
-                    username, password, note, parentId: currentPath 
-                });
+                db.push({ id: 's_' + Date.now(), type: 'site', name, url, profile, username, password, note, lockPass, parentId: currentPath });
             }
-            
-            saveDB();
-            renderItems();
-            siteModal.classList.remove('active');
+            saveDB(); renderItems();
+            document.getElementById('siteModal').classList.remove('active');
         };
 
-        // ذخیره پوشه
         document.getElementById('addFolderBtn').onclick = () => {
-            document.getElementById('folderModalTitle').textContent = 'ساخت پوشه جدید';
-            document.getElementById('editFolderId').value = '';
-            document.getElementById('folderName').value = '';
-            folderModal.classList.add('active');
+            document.getElementById('folderModalTitle').textContent = 'ساخت پوشه';
+            ['editFolderId','folderName','folderLockPass'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('folderModal').classList.add('active');
         };
-        document.getElementById('cancelFolderBtn').onclick = () => folderModal.classList.remove('active');
 
         document.getElementById('saveFolderBtn').onclick = () => {
             const id = document.getElementById('editFolderId').value;
             const name = document.getElementById('folderName').value.trim();
-            if (!name) { alert('نام پوشه را وارد کنید!'); return; }
+            const lockPass = document.getElementById('folderLockPass').value.trim();
+
+            if (!name) { alert('نام پوشه الزامی است!'); return; }
 
             if (id) {
                 const index = db.findIndex(i => i.id === id);
-                if (index !== -1) db[index].name = name;
+                db[index] = { ...db[index], name, lockPass };
             } else {
-                db.push({ id: 'f_' + Date.now(), type: 'folder', name: name, parentId: currentPath });
+                db.push({ id: 'f_' + Date.now(), type: 'folder', name, lockPass, parentId: currentPath });
             }
-            
-            saveDB();
-            renderItems();
-            folderModal.classList.remove('active');
+            saveDB(); renderItems();
+            document.getElementById('folderModal').classList.remove('active');
         };
 
-        searchInput.addEventListener('input', (e) => { searchQuery = e.target.value; renderItems(); });
+        // --- ویرایش و حذف ---
+        window.openEditModal = function(id, event) {
+            event.stopPropagation(); closeAllActionMenus();
+            const item = db.find(i => i.id === id);
+            if (!item) return;
 
-        renderBreadcrumbs();
-        renderItems();
+            if (item.type === 'site') {
+                document.getElementById('siteModalTitle').textContent = 'ویرایش سایت';
+                document.getElementById('editSiteId').value = item.id;
+                document.getElementById('siteName').value = item.name;
+                document.getElementById('siteUrl').value = item.url;
+                document.getElementById('siteProfile').value = item.profile || '';
+                document.getElementById('siteUsername').value = item.username || '';
+                document.getElementById('sitePassword').value = item.password || '';
+                document.getElementById('siteNote').value = item.note || '';
+                document.getElementById('siteLockPass').value = item.lockPass || '';
+                document.getElementById('siteModal').classList.add('active');
+            } else {
+                document.getElementById('folderModalTitle').textContent = 'ویرایش پوشه';
+                document.getElementById('editFolderId').value = item.id;
+                document.getElementById('folderName').value = item.name;
+                document.getElementById('folderLockPass').value = item.lockPass || '';
+                document.getElementById('folderModal').classList.add('active');
+            }
+        };
+
+        window.askDeleteItem = function(id, event) {
+            event.stopPropagation(); closeAllActionMenus();
+            document.getElementById('deleteItemId').value = id;
+            document.getElementById('deleteModal').classList.add('active');
+        };
+
+        document.getElementById('confirmDeleteBtn').onclick = () => {
+            const id = document.getElementById('deleteItemId').value;
+            function deleteRecursive(itemId) {
+                const children = db.filter(item => item.parentId === itemId);
+                children.forEach(child => deleteRecursive(child.id));
+                db = db.filter(item => item.id !== itemId);
+            }
+            deleteRecursive(id); saveDB(); renderItems();
+            document.getElementById('deleteModal').classList.remove('active');
+        };
+
+        document.getElementById('searchInput').addEventListener('input', (e) => { searchQuery = e.target.value; renderItems(); });
+        
+        // بستن مودال‌ها با کلیک بیرون
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('active'); });
+        });
+        document.addEventListener('click', (e) => { if (!e.target.closest('.item-card')) closeAllActionMenus(); });
+
     </script>
 </body>
 </html>
