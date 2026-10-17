@@ -26,12 +26,22 @@ jobs:
         distribution: 'temurin'
         java-version: '21'
 
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-
-    - name: Accept Android Licenses
+    - name: Setup Android SDK & Accept Licenses
       run: |
+        # 1. دانلود و نصب ابزارهای خط فرمان اندروید
+        mkdir -p $HOME/android-sdk/cmdline-tools
+        cd $HOME/android-sdk/cmdline-tools
+        wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O tools.zip
+        unzip -q tools.zip
+        mv cmdline-tools latest
+        
+        # 2. تنظیم متغیرهای محیطی
+        echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+        echo "PATH=$HOME/android-sdk/cmdline-tools/latest/bin:$PATH" >> $GITHUB_ENV
+        
+        # 3. تایید تمام لایسنس‌ها
         yes | sdkmanager --licenses > /dev/null 2>&1 || true
+        echo "Android SDK setup and licenses accepted successfully!"
 
     - name: Install Capacitor and Init
       run: |
