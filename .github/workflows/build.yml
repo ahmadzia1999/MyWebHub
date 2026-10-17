@@ -33,8 +33,10 @@ jobs:
         wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O tools.zip
         unzip -q tools.zip
         mv cmdline-tools latest
+        # فقط ANDROID_HOME را تنظیم می‌کنیم و ANDROID_SDK_ROOT را پاک می‌کنیم
         echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
-        echo "PATH=$HOME/android-sdk/cmdline-tools/latest/bin:$PATH" >> $GITHUB_ENV
+        echo "ANDROID_SDK_ROOT=" >> $GITHUB_ENV
+        echo "PATH=$HOME/android-sdk/cmdline-tools/latest/bin:$HOME/android-sdk/platform-tools:$PATH" >> $GITHUB_ENV
         yes | sdkmanager --licenses > /dev/null 2>&1 || true
 
     - name: Prepare WWW Folder
@@ -56,6 +58,8 @@ jobs:
       run: |
         cd android
         chmod +x gradlew
+        # این دستور به Gradle می‌گوید که آدرس SDK را از ANDROID_HOME بخواند
+        echo "sdk.dir=$ANDROID_HOME" > local.properties
         ./gradlew assembleDebug
 
     - name: Upload APK
