@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>مرکز مدیریت وب‌سایت‌ها</title>
+    <style>
+        /* --- تنظیمات پایه و تم تیره --- */
+        :root {
+            --bg-color: #0f0f13;
+            --surface-color: #1e1e24;
+            --surface-hover: #2a2a32;
+            --text-main: #f0f0f0;
+            --text-muted: #8a8a93;
+            --primary: #00d2ff;
+            --danger: #ff4757;
+            --danger-hover: #ff6b81;
+            --folder-color: #ffca28;
+            --border-radius: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding-bottom: 90px;
+            overflow-x: hidden;
+        }
+
+        /* --- هدر و ابزارها --- */
+        header {
+            background-color: var(--surface-color);
+            padding: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            border-bottom: 1px solid #333;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .top-bar h1 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toolbar { display: flex; gap: 10px; }
+
+        .tool-btn {
+            background: var(--surface-hover);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .tool-btn:active { transform: scale(0.9); }
+
+        .breadcrumbs {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+            direction: rtl;
+        }
+        
+        .breadcrumbs span { cursor: pointer; color: var(--primary); }
+        .breadcrumbs span:last-child { color: var(--text-main); font-weight: bold; cursor: default; }
+
+        .search-box {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 25px;
+            border: 1px solid #333;
+            background-color: #15151a;
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        /* --- لیست آیتم‌ها --- */
+        .items-container {
+            padding: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .item-card {
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-main);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border: 1px solid #2a2a32;
+            aspect-ratio: 1 / 1;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item-card:active { transform: scale(0.95); }
+        .folder-card { border-color: rgba(255, 202, 40, 0.3); }
+        .site-card { border-color: rgba(0, 210, 255, 0.3); cursor: pointer; }
+
+        .item-icon { font-size: 2.5rem; margin-bottom: 10px; }
+        .item-name { font-size: 0.95rem; font-weight: bold; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        .item-sub { 
+            font-size: 0.7rem; color: var(--text-muted); margin-top: 5px; 
+            background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 10px; 
+            max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
+        }
+
+        .item-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* --- منوی عملیات (Long Press) --- */
+        .action-menu {
+            position: absolute;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            background: rgba(30, 30, 36, 0.98);
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            transition: bottom 0.3s;
+            z-index: 10;
+        }
+        .action-menu.active { bottom: 0; }
+        .action-btn { 
+            background: none; border: none; color: white; padding: 12px 10px; 
+            font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; 
+        }
+        .action-btn.edit { color: var(--primary); }
+        .action-btn.delete { color: var(--danger); }
+
+        /* --- دکمه‌های شناور --- */
+        .fab-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 15px; z-index: 100; }
+        .fab { border: none; padding: 14px 24px; border-radius: 30px; font-size: 0.95rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .fab-site { background-color: var(--primary); color: #000; }
+        .fab-folder { background-color: var(--folder-color); color: #000; }
+
+        /* --- مودال‌ها --- */
+        .modal-overlay { 
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+            background: rgba(0,0,0,0.85); display: none; align-items: center; 
+            justify-content: center; z-index: 1000; padding: 20px; 
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content { 
+            background-color: var(--surface-color); width: 100%; max-width: 400px; 
+            border-radius: var(--border-radius); padding: 25px; animation: popIn 0.3s ease-out;
+            max-height: 90vh; overflow-y: auto;
+        }
+        .modal-content h2 { margin-bottom: 20px; font-size: 1.2rem; text-align: center; color: var(--primary); }
+        
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; margin-bottom: 6px; font-size: 0.85rem; color: var(--text-muted); }
+        .form-group input, .form-group textarea { 
+            width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #444; 
+            background-color: #15151a; color: white; font-size: 0.95rem; outline: none; 
+            font-family: inherit;
+        }
+        .form-group textarea { resize: vertical; min-height: 60px; }
+        
+        .btn-group { display: flex; gap: 10px; margin-top: 25px; }
+        .btn { flex: 1; padding: 12px; border-radius: 8px; border: none; font-size: 0.95rem; font-weight: bold; cursor: pointer; }
+        .btn-save { background-color: var(--primary); color: #000; }
+        .btn-cancel { background-color: var(--surface-hover); color: white; }
+        .btn-danger { background-color: var(--danger); color: white; }
+        .btn-danger:active { background-color: var(--danger-hover); }
+
+        .empty-state { grid-column: 1 / -1; text-align: center; color: var(--text-muted); margin-top: 50px; }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- هدر اصلی -->
+    <header>
+        <div class="top-bar">
+            <h1>🗂️ مرکز مدیریت وب</h1>
+            <div class="toolbar">
+                <button class="tool-btn" id="goBackBtn" title="بازگشت">↩</button>
+            </div>
+        </div>
+        <div class="breadcrumbs" id="breadcrumbs"></div>
+        <input type="text" id="searchInput" class="search-box" placeholder="جستجو...">
+    </header>
+
+    <!-- لیست آیتم‌ها -->
+    <div class="items-container" id="itemsContainer"></div>
+
+    <!-- دکمه‌های شناور -->
+    <div class="fab-container">
+        <button class="fab fab-folder" id="addFolderBtn"><span>📁</span> پوشه جدید</button>
+        <button class="fab fab-site" id="addSiteBtn"><span>🌐</span> سایت جدید</button>
+    </div>
+
+    <!-- مودال افزودن/ویرایش سایت -->
+    <div class="modal-overlay" id="siteModal">
+        <div class="modal-content">
+            <h2 id="siteModalTitle">افزودن وب‌سایت</h2>
+            <input type="hidden" id="editSiteId">
+            
+            <div class="form-group">
+                <label>نام سایت (مثلاً: هاست)</label>
+                <input type="text" id="siteName" placeholder="نام سایت...">
+            </div>
+            <div class="form-group">
+                <label>آدرس سایت (با https://)</label>
+                <input type="url" id="siteUrl" dir="ltr" placeholder="https://...">
+            </div>
+            <div class="form-group">
+                <label>پروفایل / نام اکانت (اختیاری)</label>
+                <input type="text" id="siteProfile" placeholder="مثلاً: اکانت ادمین...">
+            </div>
+            
+            <hr style="border: 0; border-top: 1px solid #333; margin: 15px 0;">
+            
+            <div class="form-group">
+                <label>یوزرنیم / ایمیل</label>
+                <input type="text" id="siteUsername" dir="ltr" placeholder="example@mail.com">
+            </div>
+            <div class="form-group">
+                <label>رمز عبور</label>
+                <input type="text" id="sitePassword" dir="ltr" placeholder="********">
+            </div>
+            <div class="form-group">
+                <label>یادداشت (Note)</label>
+                <textarea id="siteNote" placeholder="توضیحات اضافه..."></textarea>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-cancel" id="cancelSiteBtn">انصراف</button>
+                <button class="btn btn-save" id="saveSiteBtn">ذخیره</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال افزودن/ویرایش پوشه -->
+    <div class="modal-overlay" id="folderModal">
+        <div class="modal-content">
+            <h2 id="folderModalTitle">ساخت پوشه جدید</h2>
+            <input type="hidden" id="editFolderId">
+            <div class="form-group">
+                <label>نام پوشه</label>
+                <input type="text" id="folderName" placeholder="نام پوشه...">
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-cancel" id="cancelFolderBtn">انصراف</button>
+                <button class="btn btn-save" id="saveFolderBtn">ذخیره</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال تایید حذف -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-content">
+            <h2 style="color: var(--danger);">حذف آیتم</h2>
+            <p style="text-align: center; margin-bottom: 20px; line-height: 1.6;">
+                آیا از حذف این مورد مطمئن هستید؟<br>
+                <span style="font-size: 0.85rem; color: var(--text-muted);">(در صورت پوشه بودن، تمام محتویات داخل آن نیز حذف می‌شوند)</span>
+            </p>
+            <input type="hidden" id="deleteItemId">
+            <div class="btn-group">
+                <button class="btn btn-cancel" id="cancelDeleteBtn">انصراف</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn">بله، حذف کن</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- دیتابیس خالی (اطلاعات نمونه پاک شد) ---
+        let db = JSON.parse(localStorage.getItem('webHubProDB')) || [];
+        let currentPath = 'root';
+        let searchQuery = '';
+
+        const itemsContainer = document.getElementById('itemsContainer');
+        const breadcrumbs = document.getElementById('breadcrumbs');
+        const searchInput = document.getElementById('searchInput');
+        
+        const siteModal = document.getElementById('siteModal');
+        const folderModal = document.getElementById('folderModal');
+        const deleteModal = document.getElementById('deleteModal');
+
+        function saveDB() { localStorage.setItem('webHubProDB', JSON.stringify(db)); }
+
+        function getPathArray(id) {
+            let path = [];
+            let current = db.find(item => item.id === id);
+            while (current) {
+                path.unshift(current);
+                current = db.find(item => item.id === current.parentId);
+            }
+            return path;
+        }
+
+        function renderBreadcrumbs() {
+            breadcrumbs.innerHTML = '';
+            const homeSpan = document.createElement('span');
+            homeSpan.textContent = 'خانه';
+            homeSpan.onclick = () => navigateTo('root');
+            breadcrumbs.appendChild(homeSpan);
+
+            const path = getPathArray(currentPath);
+            path.forEach(folder => {
+                breadcrumbs.appendChild(document.createTextNode(' / '));
+                const span = document.createElement('span');
+                span.textContent = folder.name;
+                span.onclick = () => navigateTo(folder.id);
+                breadcrumbs.appendChild(span);
+            });
+        }
+
+        function closeAllActionMenus() {
+            document.querySelectorAll('.action-menu').forEach(menu => menu.classList.remove('active'));
+        }
+
+        function renderItems() {
+            itemsContainer.innerHTML = '';
+            let items = db.filter(item => item.parentId === currentPath);
+            
+            if (searchQuery) {
+                items = db.filter(item => 
+                    item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                    (item.url && item.url.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                    (item.profile && item.profile.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                    (item.username && item.username.toLowerCase().includes(searchQuery.toLowerCase()))
+                );
+            }
+
+            if (items.length === 0) {
+                itemsContainer.innerHTML = `<div class="empty-state">هیچ آیتمی یافت نشد. از دکمه‌های پایین برای افزودن استفاده کنید.</div>`;
+                return;
+            }
+
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = `item-card ${item.type === 'folder' ? 'folder-card' : 'site-card'}`;
+                
+                if (item.type === 'folder') {
+                    card.innerHTML = `<div class="item-icon" style="color: var(--folder-color)">📁</div><div class="item-name">${item.name}</div>`;
+                    card.onclick = () => {
+                        if(card.querySelector('.action-menu.active')) { closeAllActionMenus(); return; }
+                        navigateTo(item.id);
+                    };
+                } else {
+                    const hasCreds = (item.username || item.password) ? `<div class="item-badge">🔐</div>` : '';
+                    
+                    card.innerHTML = `
+                        ${hasCreds}
+                        <div class="item-icon" style="color: var(--primary)">🌐</div>
+                        <div class="item-name">${item.name}</div>
+                        ${item.profile ? `<div class="item-sub">${item.profile}</div>` : ''}
+                    `;
+                    // **حفظ Session: هدایت به مرورگر خارجی**
+                    card.onclick = (e) => {
+                        if(card.querySelector('.action-menu.active')) { closeAllActionMenus(); return; }
+                        
+                        // باز کردن لینک در مرورگر اصلی گوشی برای جلوگیری از پاک شدن لاگین
+                        window.open(item.url, '_system');
+                    };
+                }
+
+                const actionMenu = document.createElement('div');
+                actionMenu.className = 'action-menu';
+                actionMenu.innerHTML = `
+                    <button class="action-btn edit" onclick="openEditModal('${item.id}', event)">✏️ ویرایش</button>
+                    <button class="action-btn delete" onclick="askDeleteItem('${item.id}', event)">🗑️ حذف</button>
+                `;
+                card.appendChild(actionMenu);
+
+                let pressTimer;
+                card.addEventListener('touchstart', (e) => { 
+                    if(e.target.closest('.action-menu')) return;
+                    pressTimer = setTimeout(() => { 
+                        closeAllActionMenus();
+                        actionMenu.classList.add('active'); 
+                    }, 500); 
+                });
+                card.addEventListener('touchend', () => clearTimeout(pressTimer));
+                card.addEventListener('touchmove', () => clearTimeout(pressTimer));
+
+                itemsContainer.appendChild(card);
+            });
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.item-card')) closeAllActionMenus();
+        });
+
+        function navigateTo(id) {
+            currentPath = id;
+            searchInput.value = '';
+            searchQuery = '';
+            renderBreadcrumbs();
+            renderItems();
+        }
+
+        document.getElementById('goBackBtn').onclick = () => {
+            if (currentPath === 'root') return;
+            const currentFolder = db.find(item => item.id === currentPath);
+            navigateTo(currentFolder ? currentFolder.parentId : 'root');
+        };
+
+        // ویرایش
+        window.openEditModal = function(id, event) {
+            event.stopPropagation();
+            closeAllActionMenus();
+            const item = db.find(i => i.id === id);
+            if (!item) return;
+
+            if (item.type === 'site') {
+                document.getElementById('siteModalTitle').textContent = 'ویرایش وب‌سایت';
+                document.getElementById('editSiteId').value = item.id;
+                document.getElementById('siteName').value = item.name;
+                document.getElementById('siteUrl').value = item.url;
+                document.getElementById('siteProfile').value = item.profile || '';
+                document.getElementById('siteUsername').value = item.username || '';
+                document.getElementById('sitePassword').value = item.password || '';
+                document.getElementById('siteNote').value = item.note || '';
+                siteModal.classList.add('active');
+            } else {
+                document.getElementById('folderModalTitle').textContent = 'ویرایش پوشه';
+                document.getElementById('editFolderId').value = item.id;
+                document.getElementById('folderName').value = item.name;
+                folderModal.classList.add('active');
+            }
+        };
+
+        // حذف
+        window.askDeleteItem = function(id, event) {
+            event.stopPropagation();
+            closeAllActionMenus();
+            document.getElementById('deleteItemId').value = id;
+            deleteModal.classList.add('active');
+        };
+
+        document.getElementById('cancelDeleteBtn').onclick = () => deleteModal.classList.remove('active');
+        
+        document.getElementById('confirmDeleteBtn').onclick = () => {
+            const id = document.getElementById('deleteItemId').value;
+            function deleteRecursive(itemId) {
+                const children = db.filter(item => item.parentId === itemId);
+                children.forEach(child => deleteRecursive(child.id));
+                db = db.filter(item => item.id !== itemId);
+            }
+            deleteRecursive(id);
+            saveDB();
+            renderItems();
+            deleteModal.classList.remove('active');
+        };
+
+        // ذخیره سایت
+        document.getElementById('addSiteBtn').onclick = () => {
+            document.getElementById('siteModalTitle').textContent = 'افزودن وب‌سایت';
+            document.getElementById('editSiteId').value = '';
+            document.getElementById('siteName').value = '';
+            document.getElementById('siteUrl').value = '';
+            document.getElementById('siteProfile').value = '';
+            document.getElementById('siteUsername').value = '';
+            document.getElementById('sitePassword').value = '';
+            document.getElementById('siteNote').value = '';
+            siteModal.classList.add('active');
+        };
+        document.getElementById('cancelSiteBtn').onclick = () => siteModal.classList.remove('active');
+
+        document.getElementById('saveSiteBtn').onclick = () => {
+            const id = document.getElementById('editSiteId').value;
+            const name = document.getElementById('siteName').value.trim();
+            let url = document.getElementById('siteUrl').value.trim();
+            const profile = document.getElementById('siteProfile').value.trim();
+            const username = document.getElementById('siteUsername').value.trim();
+            const password = document.getElementById('sitePassword').value.trim();
+            const note = document.getElementById('siteNote').value.trim();
+
+            if (!name || !url) { alert('نام و آدرس الزامی است!'); return; }
+            if (!/^https?:\/\//i.test(url)) { url = 'https://' + url; }
+
+            if (id) {
+                const index = db.findIndex(i => i.id === id);
+                if (index !== -1) {
+                    db[index] = { ...db[index], name, url, profile, username, password, note };
+                }
+            } else {
+                db.push({ 
+                    id: 's_' + Date.now(), type: 'site', name, url, profile, 
+                    username, password, note, parentId: currentPath 
+                });
+            }
+            
+            saveDB();
+            renderItems();
+            siteModal.classList.remove('active');
+        };
+
+        // ذخیره پوشه
+        document.getElementById('addFolderBtn').onclick = () => {
+            document.getElementById('folderModalTitle').textContent = 'ساخت پوشه جدید';
+            document.getElementById('editFolderId').value = '';
+            document.getElementById('folderName').value = '';
+            folderModal.classList.add('active');
+        };
+        document.getElementById('cancelFolderBtn').onclick = () => folderModal.classList.remove('active');
+
+        document.getElementById('saveFolderBtn').onclick = () => {
+            const id = document.getElementById('editFolderId').value;
+            const name = document.getElementById('folderName').value.trim();
+            if (!name) { alert('نام پوشه را وارد کنید!'); return; }
+
+            if (id) {
+                const index = db.findIndex(i => i.id === id);
+                if (index !== -1) db[index].name = name;
+            } else {
+                db.push({ id: 'f_' + Date.now(), type: 'folder', name: name, parentId: currentPath });
+            }
+            
+            saveDB();
+            renderItems();
+            folderModal.classList.remove('active');
+        };
+
+        searchInput.addEventListener('input', (e) => { searchQuery = e.target.value; renderItems(); });
+
+        renderBreadcrumbs();
+        renderItems();
+    </script>
+</body>
+</html>
