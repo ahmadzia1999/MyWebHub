@@ -33,12 +33,19 @@ jobs:
         wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O tools.zip
         unzip -q tools.zip
         mv cmdline-tools latest
-        echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
-        echo "ANDROID_SDK_ROOT=" >> $GITHUB_ENV
-        echo "PATH=$HOME/android-sdk/cmdline-tools/latest/bin:$HOME/android-sdk/platform-tools:$PATH" >> $GITHUB_ENV
         
-        # تایید مجوزها با دستور استاندارد
+        export ANDROID_HOME=$HOME/android-sdk
+        export PATH=$HOME/android-sdk/cmdline-tools/latest/bin:$HOME/android-sdk/platform-tools:$PATH
+        
+        # این بار خودمان فایل لایسنس را در مسیر استاندارد گوگل می‌سازیم تا گریدل آن را ببیند
+        mkdir -p $ANDROID_HOME/licenses
+        echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > $ANDROID_HOME/licenses/android-sdk-license
+        echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> $ANDROID_HOME/licenses/android-sdk-license
+        echo "84831b9409646a918e30573bab4c9c91346d8abd" >> $ANDROID_HOME/licenses/android-sdk-license
+
+        # نصب مجدد ابزارها با دستور yes
         yes | sdkmanager --licenses > /dev/null 2>&1 || true
+        sdkmanager "platforms;android-36" "build-tools;35.0.0" > /dev/null 2>&1 || true
 
     - name: Prepare WWW Folder
       run: |
@@ -59,13 +66,11 @@ jobs:
       run: |
         cd android
         
-        # این دستور به Gradle می‌گوید که به جای نسخه‌های جدید، از نسخه‌های موجود در سیستم استفاده کن
-        sed -i 's/compileSdkVersion .*/compileSdkVersion 34/' app/build.gradle
-        sed -i 's/targetSdkVersion .*/targetSdkVersion 34/' app/build.gradle
-        sed -i 's/buildToolsVersion .*/buildToolsVersion "34.0.0"/' app/build.gradle
+        # ساخت فایل gradle.properties برای اطمینان از اینکه لایسنس‌ها رد نمی‌شوند
+        echo "android.builder.sdkDownload=true" >> gradle.properties
+        echo "sdk.dir=$HOME/android-sdk" > local.properties
         
         chmod +x gradlew
-        echo "sdk.dir=$ANDROID_HOME" > local.properties
         ./gradlew assembleDebug
 
     - name: Upload APK
