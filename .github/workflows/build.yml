@@ -26,12 +26,12 @@ jobs:
         distribution: 'temurin'
         java-version: '21'
 
-    - name: Accept Android Licenses
-      run: |
-        yes | sdkmanager --licenses || true
-
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
+
+    - name: Accept Android Licenses
+      run: |
+        yes | sdkmanager --licenses > /dev/null 2>&1 || true
 
     - name: Install Capacitor and Init
       run: |
