@@ -37,11 +37,8 @@ jobs:
         echo "ANDROID_SDK_ROOT=" >> $GITHUB_ENV
         echo "PATH=$HOME/android-sdk/cmdline-tools/latest/bin:$HOME/android-sdk/platform-tools:$PATH" >> $GITHUB_ENV
         
-        # تایید مجوزها
+        # تایید مجوزها با دستور استاندارد
         yes | sdkmanager --licenses > /dev/null 2>&1 || true
-        
-        # نصب نسخه‌های مورد نیاز (این خط جدید است)
-        sdkmanager "platforms;android-36" "build-tools;35.0.0" > /dev/null 2>&1 || true
 
     - name: Prepare WWW Folder
       run: |
@@ -61,6 +58,12 @@ jobs:
     - name: Build APK
       run: |
         cd android
+        
+        # این دستور به Gradle می‌گوید که به جای نسخه‌های جدید، از نسخه‌های موجود در سیستم استفاده کن
+        sed -i 's/compileSdkVersion .*/compileSdkVersion 34/' app/build.gradle
+        sed -i 's/targetSdkVersion .*/targetSdkVersion 34/' app/build.gradle
+        sed -i 's/buildToolsVersion .*/buildToolsVersion "34.0.0"/' app/build.gradle
+        
         chmod +x gradlew
         echo "sdk.dir=$ANDROID_HOME" > local.properties
         ./gradlew assembleDebug
